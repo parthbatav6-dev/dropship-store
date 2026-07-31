@@ -14,6 +14,7 @@ export default function App() {
 
   return (
     <div className="app-shell">
+      <div className="trust-bar">Free shipping on orders over ₹999 · Ships in 5–7 business days</div>
       <header className="site-header">
         <Link to="/" className="brand-lockup">
           <Logo />

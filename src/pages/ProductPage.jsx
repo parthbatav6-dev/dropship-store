@@ -35,6 +35,9 @@ export default function ProductPage() {
       <img src={product.images?.[0] || 'https://placehold.co/600x600'} alt={product.name} />
       <div className="product-info">
         <h1>{product.name}</h1>
+        {product.specs && (
+          <p className="spec-line">{product.specs.split('|').map(s => s.trim()).join(' · ')}</p>
+        )}
         <p className="price">₹{product.sell_price}</p>
         <p className="description">{product.description}</p>
 

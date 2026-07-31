@@ -22,33 +22,50 @@ export default function Home() {
     fetchProducts();
   }, []);
 
+  if (loading) return <p className="status-msg">Loading products…</p>;
+  if (error) return <p className="status-msg error">Couldn't load products: {error}</p>;
+  if (products.length === 0) return <p className="status-msg">No products yet. Add some in Supabase.</p>;
+
+  const featured = products[0];
+  const rest = products.slice(1);
+
   return (
     <>
-      <section className="store-hero grid-texture">
-        <p className="eyebrow">Desk &amp; home upgrades</p>
-        <h1>Small changes to your space, worth noticing.</h1>
-        <p>Practical, well-made pieces for the desk and the room around it — picked for what they actually fix, not just how they look in a photo.</p>
+      {/* Hero spotlights one real product — a photo doing the work,
+          not generic copy. Swap featured.images[0] for a real shot
+          once you've got one. */}
+      <section className="product-hero grid-texture">
+        <div className="product-hero-media">
+          <img src={featured.images?.[0] || 'https://placehold.co/700x700'} alt={featured.name} />
+        </div>
+        <div className="product-hero-copy">
+          <p className="eyebrow">{featured.stock_status === 'in_stock' ? 'In stock, ships this week' : featured.stock_status.replace('_', ' ')}</p>
+          <h1>{featured.name}</h1>
+          {featured.specs && (
+            <p className="spec-line">{featured.specs.split('|').map(s => s.trim()).join(' · ')}</p>
+          )}
+          <p className="hero-price">₹{featured.sell_price}</p>
+          <Link to={`/product/${featured.slug}`} className="btn-primary">Shop now</Link>
+        </div>
       </section>
 
-      {loading && <p className="status-msg">Loading products…</p>}
-      {error && <p className="status-msg error">Couldn't load products: {error}</p>}
-      {!loading && !error && products.length === 0 && (
-        <p className="status-msg">No products yet. Add some in Supabase.</p>
-      )}
-
-      {!loading && !error && products.length > 0 && (
-        <div className="product-grid">
-          {products.map((p) => (
-            <Link to={`/product/${p.slug}`} key={p.id} className="product-card">
-              <img src={p.images?.[0] || 'https://placehold.co/400x400'} alt={p.name} />
-              <div className="card-body">
-                <p className="product-tag">{p.stock_status === 'in_stock' ? 'In stock' : p.stock_status.replace('_', ' ')}</p>
-                <h3>{p.name}</h3>
-                <p className="price">₹{p.sell_price}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
+      {rest.length > 0 && (
+        <>
+          <h2 className="section-heading">More for your setup</h2>
+          <div className="product-grid">
+            {rest.map((p) => (
+              <Link to={`/product/${p.slug}`} key={p.id} className="product-card">
+                <img src={p.images?.[0] || 'https://placehold.co/400x400'} alt={p.name} />
+                <div className="card-body">
+                  <p className="product-tag">{p.stock_status === 'in_stock' ? 'In stock' : p.stock_status.replace('_', ' ')}</p>
+                  <h3>{p.name}</h3>
+                  {p.specs && <p className="spec-line small">{p.specs.split('|').map(s => s.trim()).join(' · ')}</p>}
+                  <p className="price">₹{p.sell_price}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </>
       )}
     </>
   );

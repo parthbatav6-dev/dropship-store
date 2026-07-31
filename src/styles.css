@@ -31,6 +31,16 @@ body {
   background-size: 24px 24px;
 }
 
+.trust-bar {
+  background: var(--ink);
+  color: var(--paper);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  padding: 0.5rem 1rem;
+}
+
 .site-header {
   display: flex;
   justify-content: space-between;
@@ -88,15 +98,26 @@ main {
   padding: 1.5rem;
 }
 
-/* Hero — the one bold moment on the page */
-.store-hero {
-  padding: 3rem 1.5rem;
-  margin: -1.5rem -1.5rem 2rem;
+/* Hero — spotlights one real product, photo-led */
+.product-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: center;
+  padding: 2.5rem 1.5rem;
+  margin: -1.5rem -1.5rem 2.5rem;
   border-bottom: 1px solid var(--border);
-  text-align: left;
 }
 
-.store-hero .eyebrow {
+.product-hero-media img {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.product-hero-copy .eyebrow {
   font-family: var(--font-mono);
   font-size: 0.8rem;
   color: var(--pine);
@@ -105,20 +126,36 @@ main {
   margin: 0 0 0.6rem;
 }
 
-.store-hero h1 {
+.product-hero-copy h1 {
   font-family: var(--font-display);
-  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-size: clamp(1.6rem, 3.5vw, 2.3rem);
   font-weight: 600;
   margin: 0 0 0.5rem;
   letter-spacing: -0.01em;
-  max-width: 20ch;
 }
 
-.store-hero p {
+.spec-line {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
   color: var(--muted);
-  max-width: 42ch;
-  margin: 0;
-  font-size: 1rem;
+  margin: 0 0 1rem;
+}
+
+.spec-line.small { font-size: 0.72rem; margin: 0 0 0.4rem; }
+
+.hero-price {
+  font-family: var(--font-mono);
+  color: var(--brass);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
+}
+
+.section-heading {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
 }
 
 .product-grid {
@@ -267,5 +304,5 @@ main {
 @media (max-width: 640px) {
   .product-detail { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
-  .store-hero { padding: 2rem 1.25rem; }
+  .product-hero { grid-template-columns: 1fr; padding: 1.5rem 1.25rem; }
 }
