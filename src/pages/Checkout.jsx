@@ -111,3 +111,44 @@ export default function Checkout() {
       setSubmitting(false);
     }
   }
+
+  if (items.length === 0) {
+    return <p className="status-msg">Your cart is empty. <a href="/">Go shopping</a></p>;
+  }
+
+  return (
+    <form className="checkout-form" onSubmit={handlePay}>
+      <h1>Checkout</h1>
+
+      <div className="checkout-summary">
+        {items.map((i) => (
+          <div key={i.id} className="summary-row">
+            <span>{i.name} × {i.quantity}</span>
+            <span>₹{(i.price * i.quantity).toFixed(2)}</span>
+          </div>
+        ))}
+        <div className="summary-row total">
+          <span>Total</span>
+          <span>₹{total.toFixed(2)}</span>
+        </div>
+      </div>
+
+      <input name="name" placeholder="Full name" value={form.name} onChange={handleChange} required />
+      <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
+      <input name="phone" type="tel" placeholder="Phone number" value={form.phone} onChange={handleChange} required />
+      <input name="line1" placeholder="Address line 1" value={form.line1} onChange={handleChange} required />
+      <input name="line2" placeholder="Address line 2 (optional)" value={form.line2} onChange={handleChange} />
+      <div className="form-row">
+        <input name="city" placeholder="City" value={form.city} onChange={handleChange} required />
+        <input name="state" placeholder="State" value={form.state} onChange={handleChange} required />
+        <input name="pincode" placeholder="Pincode" value={form.pincode} onChange={handleChange} required />
+      </div>
+
+      {error && <p className="status-msg error">{error}</p>}
+
+      <button className="btn-primary" type="submit" disabled={submitting}>
+        {submitting ? 'Processing…' : `Pay ₹${total.toFixed(2)}`}
+      </button>
+    </form>
+  );
+}
