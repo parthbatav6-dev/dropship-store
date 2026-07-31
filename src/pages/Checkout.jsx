@@ -52,7 +52,7 @@ export default function Checkout() {
 
       await supabase.from('order_items').insert(
         items.map((i) => ({
-          order_id: order.id,
+          order_id: orderId,
           product_id: i.id,
           product_name: i.name,
           unit_price: i.price,
@@ -60,16 +60,16 @@ export default function Checkout() {
         }))
       );
 
-      // 2. Ask our Netlify Function to create a Razorpay order (keeps the Razorpay secret key server-side)
+      // 2. Ask our Vercel Function to create a Razorpay order (keeps the Razorpay secret key server-side)
       const razorpayOrderRes = await fetch('/api/create-razorpay-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: total, orderId: order.id }),
+        body: JSON.stringify({ amount: total, orderId: orderId }),
       });
       const razorpayOrder = await razorpayOrderRes.json();
       if (!razorpayOrderRes.ok) throw new Error(razorpayOrder.error || 'Payment setup failed');
 
-      await supabase.from('orders').update({ razorpay_order_id: razorpayOrder.id }).eq('id', order.id);
+      await supabase.from('orders').update({ razorpay_order_id: razorpayOrder.id }).eq('id', orderId);
 
       // 3. Launch Razorpay checkout
       const rzp = new window.Razorpay({
@@ -88,15 +88,15 @@ export default function Checkout() {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
-              dbOrderId: order.id,
+              dbOrderId: orderId,
             }),
           });
           const result = await verifyRes.json();
           if (result.verified) {
             clearCart();
-            navigate('/order-confirmed', { state: { orderId: order.id } });
+            navigate('/order-confirmed', { state: { orderId: orderId } });
           } else {
-            setError('Payment could not be verified. Contact support with your order ID: ' + order.id);
+            setError('Payment could not be verified. Contact support with your order ID: ' + orderId);
           }
         },
         modal: {
@@ -111,44 +111,3 @@ export default function Checkout() {
       setSubmitting(false);
     }
   }
-
-  if (items.length === 0) {
-    return <p className="status-msg">Your cart is empty. <a href="/">Go shopping</a></p>;
-  }
-
-  return (
-    <form className="checkout-form" onSubmit={handlePay}>
-      <h1>Checkout</h1>
-
-      <div className="checkout-summary">
-        {items.map((i) => (
-          <div key={i.id} className="summary-row">
-            <span>{i.name} × {i.quantity}</span>
-            <span>₹{(i.price * i.quantity).toFixed(2)}</span>
-          </div>
-        ))}
-        <div className="summary-row total">
-          <span>Total</span>
-          <span>₹{total.toFixed(2)}</span>
-        </div>
-      </div>
-
-      <input name="name" placeholder="Full name" value={form.name} onChange={handleChange} required />
-      <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-      <input name="phone" type="tel" placeholder="Phone number" value={form.phone} onChange={handleChange} required />
-      <input name="line1" placeholder="Address line 1" value={form.line1} onChange={handleChange} required />
-      <input name="line2" placeholder="Address line 2 (optional)" value={form.line2} onChange={handleChange} />
-      <div className="form-row">
-        <input name="city" placeholder="City" value={form.city} onChange={handleChange} required />
-        <input name="state" placeholder="State" value={form.state} onChange={handleChange} required />
-        <input name="pincode" placeholder="Pincode" value={form.pincode} onChange={handleChange} required />
-      </div>
-
-      {error && <p className="status-msg error">{error}</p>}
-
-      <button className="btn-primary" type="submit" disabled={submitting}>
-        {submitting ? 'Processing…' : `Pay ₹${total.toFixed(2)}`}
-      </button>
-    </form>
-  );
-}
