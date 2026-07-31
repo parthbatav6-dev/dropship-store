@@ -27,15 +27,10 @@ export default function Checkout() {
     setError(null);
 
     try {
-      // 1. Create a pending order in Supabase.
-      // We generate the ID ourselves and skip .select() after insert —
-      // returning the inserted row needs a SELECT policy, which we
-      // deliberately don't grant (keeps order data private).
-      const orderId = crypto.randomUUID();
-      const { error: orderError } = await supabase
+      // 1. Create a pending order in Supabase
+      const { data: order, error: orderError } = await supabase
         .from('orders')
         .insert({
-          id: orderId,
           customer_name: form.name,
           customer_email: form.email,
           customer_phone: form.phone,
@@ -46,13 +41,15 @@ export default function Checkout() {
           shipping_fee: SHIPPING_FEE,
           total,
           payment_status: 'pending',
-        });
+        })
+        .select()
+        .single();
 
       if (orderError) throw orderError;
 
       await supabase.from('order_items').insert(
         items.map((i) => ({
-          order_id: orderId,
+          order_id: order.id,
           product_id: i.id,
           product_name: i.name,
           unit_price: i.price,
@@ -60,23 +57,23 @@ export default function Checkout() {
         }))
       );
 
-      // 2. Ask our Vercel Function to create a Razorpay order (keeps the Razorpay secret key server-side)
+      // 2. Ask our Netlify Function to create a Razorpay order (keeps the Razorpay secret key server-side)
       const razorpayOrderRes = await fetch('/api/create-razorpay-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: total, orderId: orderId }),
+        body: JSON.stringify({ amount: total, orderId: order.id }),
       });
       const razorpayOrder = await razorpayOrderRes.json();
       if (!razorpayOrderRes.ok) throw new Error(razorpayOrder.error || 'Payment setup failed');
 
-      await supabase.from('orders').update({ razorpay_order_id: razorpayOrder.id }).eq('id', orderId);
+      await supabase.from('orders').update({ razorpay_order_id: razorpayOrder.id }).eq('id', order.id);
 
       // 3. Launch Razorpay checkout
       const rzp = new window.Razorpay({
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: razorpayOrder.amount,
         currency: 'INR',
-        name: 'Your Store',
+        name: 'Baseplate',
         order_id: razorpayOrder.id,
         prefill: { name: form.name, email: form.email, contact: form.phone },
         handler: async function (response) {
@@ -88,15 +85,15 @@ export default function Checkout() {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
-              dbOrderId: orderId,
+              dbOrderId: order.id,
             }),
           });
           const result = await verifyRes.json();
           if (result.verified) {
             clearCart();
-            navigate('/order-confirmed', { state: { orderId: orderId } });
+            navigate('/order-confirmed', { state: { orderId: order.id } });
           } else {
-            setError('Payment could not be verified. Contact support with your order ID: ' + orderId);
+            setError('Payment could not be verified. Contact support with your order ID: ' + order.id);
           }
         },
         modal: {

@@ -5,6 +5,7 @@ import ProductPage from './pages/ProductPage.jsx';
 import Checkout from './pages/Checkout.jsx';
 import OrderConfirmation from './pages/OrderConfirmation.jsx';
 import CartDrawer from './components/CartDrawer.jsx';
+import Logo from './components/Logo.jsx';
 import { useCart } from './context/CartContext.jsx';
 
 export default function App() {
@@ -14,7 +15,9 @@ export default function App() {
   return (
     <div className="app-shell">
       <header className="site-header">
-        <Link to="/" className="logo">Your Store</Link>
+        <Link to="/" className="brand-lockup">
+          <Logo />
+        </Link>
         <button className="cart-toggle" onClick={() => setCartOpen(true)}>
           Cart {itemCount > 0 && <span className="cart-badge">{itemCount}</span>}
         </button>

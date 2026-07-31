@@ -1,8 +1,8 @@
 :root {
-  --ink: #22262b;
-  --paper: #f0f1ee;
+  --ink: #1a1a1d;
+  --paper: #f5f4f0;
   --paper-raised: #ffffff;
-  --brass: #c08a3e;
+  --brass: #c5a059;
   --pine: #3f6659;
   --border: #dedcd5;
   --muted: #6b6f76;
@@ -43,12 +43,19 @@ body {
   z-index: 10;
 }
 
-.logo {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.25rem;
-  letter-spacing: -0.01em;
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
   text-decoration: none;
+  color: var(--ink);
+}
+
+.brand-name {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.06em;
   color: var(--ink);
 }
 
