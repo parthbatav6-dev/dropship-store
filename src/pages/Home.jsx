@@ -22,19 +22,34 @@ export default function Home() {
     fetchProducts();
   }, []);
 
-  if (loading) return <p className="status-msg">Loading products…</p>;
-  if (error) return <p className="status-msg error">Couldn't load products: {error}</p>;
-  if (products.length === 0) return <p className="status-msg">No products yet. Add some in Supabase.</p>;
-
   return (
-    <div className="product-grid">
-      {products.map((p) => (
-        <Link to={`/product/${p.slug}`} key={p.id} className="product-card">
-          <img src={p.images?.[0] || 'https://placehold.co/400x400'} alt={p.name} />
-          <h3>{p.name}</h3>
-          <p className="price">₹{p.sell_price}</p>
-        </Link>
-      ))}
-    </div>
+    <>
+      <section className="store-hero grid-texture">
+        <p className="eyebrow">Desk &amp; home upgrades</p>
+        <h1>Small changes to your space, worth noticing.</h1>
+        <p>Practical, well-made pieces for the desk and the room around it — picked for what they actually fix, not just how they look in a photo.</p>
+      </section>
+
+      {loading && <p className="status-msg">Loading products…</p>}
+      {error && <p className="status-msg error">Couldn't load products: {error}</p>}
+      {!loading && !error && products.length === 0 && (
+        <p className="status-msg">No products yet. Add some in Supabase.</p>
+      )}
+
+      {!loading && !error && products.length > 0 && (
+        <div className="product-grid">
+          {products.map((p) => (
+            <Link to={`/product/${p.slug}`} key={p.id} className="product-card">
+              <img src={p.images?.[0] || 'https://placehold.co/400x400'} alt={p.name} />
+              <div className="card-body">
+                <p className="product-tag">{p.stock_status === 'in_stock' ? 'In stock' : p.stock_status.replace('_', ' ')}</p>
+                <h3>{p.name}</h3>
+                <p className="price">₹{p.sell_price}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+    </>
   );
 }
