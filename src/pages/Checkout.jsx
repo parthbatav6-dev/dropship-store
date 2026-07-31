@@ -27,10 +27,15 @@ export default function Checkout() {
     setError(null);
 
     try {
-      // 1. Create a pending order in Supabase
-      const { data: order, error: orderError } = await supabase
+      // 1. Create a pending order in Supabase.
+      // We generate the ID ourselves and skip .select() after insert —
+      // returning the inserted row needs a SELECT policy, which we
+      // deliberately don't grant (keeps order data private).
+      const orderId = crypto.randomUUID();
+      const { error: orderError } = await supabase
         .from('orders')
         .insert({
+          id: orderId,
           customer_name: form.name,
           customer_email: form.email,
           customer_phone: form.phone,
@@ -41,9 +46,7 @@ export default function Checkout() {
           shipping_fee: SHIPPING_FEE,
           total,
           payment_status: 'pending',
-        })
-        .select()
-        .single();
+        });
 
       if (orderError) throw orderError;
 
