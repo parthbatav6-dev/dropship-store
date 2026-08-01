@@ -7,6 +7,7 @@ import OrderConfirmation from './pages/OrderConfirmation.jsx';
 import Shipping from './pages/Shipping.jsx';
 import Returns from './pages/Returns.jsx';
 import Contact from './pages/Contact.jsx';
+import AdminOrders from './pages/AdminOrders.jsx';
 import CartDrawer from './components/CartDrawer.jsx';
 import Logo from './components/Logo.jsx';
 import Footer from './components/Footer.jsx';
@@ -41,6 +42,7 @@ export default function App() {
           <Route path="/shipping" element={<Shipping />} />
           <Route path="/returns" element={<Returns />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/admin" element={<AdminOrders />} />
         </Routes>
       </main>
 

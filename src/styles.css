@@ -492,3 +492,82 @@ main {
 @media (max-width: 640px) {
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ===== Admin ===== */
+.admin-login {
+  max-width: 320px;
+  margin: 4rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: center;
+}
+.admin-login h1 { font-family: var(--font-display); }
+.admin-login input {
+  padding: 0.75rem; border: 1px solid var(--border); border-radius: 5px; font-family: var(--font-body);
+}
+
+.admin-orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.admin-orders-header h1 { font-family: var(--font-display); margin: 0; }
+
+.admin-order-card {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.2rem;
+  margin-bottom: 1.2rem;
+  background: var(--paper-raised);
+}
+
+.admin-order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+.admin-order-id { font-family: var(--font-mono); font-weight: 700; margin: 0; }
+.admin-order-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); margin: 0; }
+.admin-order-total { font-family: var(--font-mono); font-size: 1.1rem; color: var(--accent); font-weight: 700; }
+
+.admin-order-customer p { margin: 0.15rem 0; font-size: 0.9rem; }
+.admin-order-customer { margin-bottom: 0.75rem; }
+
+.admin-order-items {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.admin-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  margin-bottom: 0.75rem;
+}
+.payment-paid { background: #e4f0ea; color: var(--pine); }
+.payment-pending { background: #f5eede; color: var(--accent); }
+.payment-failed { background: #f6e1df; color: var(--danger); }
+
+.admin-order-controls {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  padding-top: 0.75rem;
+}
+.admin-order-controls select,
+.admin-order-controls input {
+  padding: 0.5rem; border: 1px solid var(--border); border-radius: 5px; font-family: var(--font-body); font-size: 0.85rem;
+}
+.admin-order-controls button { margin: 0; padding: 0.5rem 1rem; font-size: 0.85rem; }
