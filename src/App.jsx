@@ -19,6 +19,10 @@ export default function App() {
         <Link to="/" className="brand-lockup">
           <Logo />
         </Link>
+        <nav className="site-nav">
+          <Link to="/?category=grooming">Grooming</Link>
+          <Link to="/?category=safety">Safety</Link>
+        </nav>
         <button className="cart-toggle" onClick={() => setCartOpen(true)}>
           Cart {itemCount > 0 && <span className="cart-badge">{itemCount}</span>}
         </button>

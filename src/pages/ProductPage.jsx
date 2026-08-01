@@ -34,6 +34,7 @@ export default function ProductPage() {
     <div className="product-detail">
       <img src={product.images?.[0] || 'https://placehold.co/600x600'} alt={product.name} />
       <div className="product-info">
+        {product.spec_code && <p className="spec-badge">[{product.spec_code}]</p>}
         <h1>{product.name}</h1>
         {product.specs && (
           <p className="spec-line">{product.specs.split('|').map(s => s.trim()).join(' · ')}</p>

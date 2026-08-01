@@ -73,7 +73,7 @@ export default function Checkout() {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: razorpayOrder.amount,
         currency: 'INR',
-        name: 'Baseplate',
+        name: 'PawRig',
         order_id: razorpayOrder.id,
         prefill: { name: form.name, email: form.email, contact: form.phone },
         handler: async function (response) {
