@@ -11,11 +11,13 @@ export default function ProductPage() {
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [added, setAdded] = useState(false);
+  const [activeImage, setActiveImage] = useState(0);
 
   useEffect(() => {
     async function fetchProduct() {
       const { data } = await supabase.from('products').select('*').eq('slug', slug).single();
       setProduct(data);
+      setActiveImage(0);
       setLoading(false);
     }
     fetchProduct();
@@ -32,7 +34,27 @@ export default function ProductPage() {
 
   return (
     <div className="product-detail">
-      <img src={product.images?.[0] || 'https://placehold.co/600x600'} alt={product.name} />
+      <div className="product-gallery">
+        <img
+          className="gallery-main"
+          src={product.images?.[activeImage] || 'https://placehold.co/600x600'}
+          alt={product.name}
+        />
+        {product.images && product.images.length > 1 && (
+          <div className="gallery-thumbs">
+            {product.images.map((img, i) => (
+              <button
+                key={i}
+                className={`gallery-thumb ${i === activeImage ? 'active' : ''}`}
+                onClick={() => setActiveImage(i)}
+                aria-label={`View image ${i + 1}`}
+              >
+                <img src={img} alt="" />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
       <div className="product-info">
         {product.spec_code && <p className="spec-badge">[{product.spec_code}]</p>}
         <h1>{product.name}</h1>
