@@ -1,6 +1,29 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient.js';
+import TrustBadges from '../components/TrustBadges.jsx';
+
+function OurPromise() {
+  const promises = [
+    { title: 'Real specs, no overclaiming', body: 'We describe what a product actually does — not inflated marketing claims.' },
+    { title: 'Secure checkout', body: 'Payments run through Razorpay. We never see or store your card details.' },
+    { title: 'Straightforward support', body: "Questions or issues after delivery? We're a message away, not a maze of chatbots." },
+  ];
+
+  return (
+    <section className="our-promise">
+      <h2 className="section-heading">Our promise</h2>
+      <div className="promise-grid">
+        {promises.map((p) => (
+          <div className="promise-card" key={p.title}>
+            <h3>{p.title}</h3>
+            <p>{p.body}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 function ProductCard({ p }) {
   return (
@@ -83,6 +106,9 @@ export default function Home() {
           <Link to={`/product/${featured.slug}`} className="btn-primary">Shop now</Link>
         </div>
       </section>
+
+      <TrustBadges />
+      <OurPromise />
 
       {grooming.length > 0 && (
         <>

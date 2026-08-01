@@ -4,8 +4,12 @@ import Home from './pages/Home.jsx';
 import ProductPage from './pages/ProductPage.jsx';
 import Checkout from './pages/Checkout.jsx';
 import OrderConfirmation from './pages/OrderConfirmation.jsx';
+import Shipping from './pages/Shipping.jsx';
+import Returns from './pages/Returns.jsx';
+import Contact from './pages/Contact.jsx';
 import CartDrawer from './components/CartDrawer.jsx';
 import Logo from './components/Logo.jsx';
+import Footer from './components/Footer.jsx';
 import { useCart } from './context/CartContext.jsx';
 
 export default function App() {
@@ -34,8 +38,13 @@ export default function App() {
           <Route path="/product/:slug" element={<ProductPage />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-confirmed" element={<OrderConfirmation />} />
+          <Route path="/shipping" element={<Shipping />} />
+          <Route path="/returns" element={<Returns />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </main>
+
+      <Footer />
 
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
     </div>
